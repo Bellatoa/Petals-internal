@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+</head>
+<body>
+    <ul>
+        <li><a href="Petal.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="Information.html">Information</a></li>
+        <li><a id="signup" href="signup.html">Sign Up</a></li>
+    </ul>
+      
+        <style>
+            body{background-color: #F3E4DB;}
+           ul{
+                 list-style-type: none;
+             margin: 0;
+             padding: 0;
+             overflow: hidden;
+             background-color: rgb(199, 150, 158);
+       }
+       li a{
+             display: inline;
+             float: left;
+         }
+         li a{
+             display: block;
+             padding: 36px 20px;
+             color: white;
+             background-color: #ddd;
+             text-decoration: none;
+         }
+         li a:hover {
+             color: #716b6b;
+             background-color: #fffdfd;
+         }
+    #signup {float: right;}
+       
+       
+       
+       </style>
+    
+    <style>
+        body{text-align: center;}
+        #enterdetails{float: left; width: 50%;background-color: darkslategray; color: floralwhite;}
+        #FindDetails{float: left; width: 50%;background-color: floralwhite; color: darkslategray;}
+        input{width: 120px;}
+    </style>
+
+        <br> <br>
+        <div id="CreateAccount">
+            <h1>Create Account</h1>
+    
+            <h4>Username</h4>
+            <input id="CreateUsername" type="text">  
+    
+            <h4>Name</h4>
+            <input id="enterName" type="text">  
+    
+            <h4>Age</h4>
+            <input id="enterAge" type="number">
+            <h4>Order</h4> 
+            <input id="enterOrder" type="text">
+            
+            <br><br>
+    
+        <button id="Create">CREATE</button>
+        <button id="update">UPDATE</button>
+        <button id="remove">REMOVE</button> <br><br>
+        </div>
+    
+        <div id="Findaccount">
+    <H1>Find By Username</H1>
+    <H4>Username</H4>
+    <input id="findUsername" type="text">  <br><br>
+        <Button id="find">Find</Button>
+    
+        <h3 id="findName" type="text"></h3>
+        <h3 id="findAge" type="text"></h3> 
+        <h3 id="findOrder" type="text"></h3>
+        <br><br>
+    
+    
+        </div>
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+          
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+              apiKey: "AIzaSyAeE9ybQT9OrQQH4D92FvICKMIz5KaPwAk",
+              authDomain: "signup-page-tech-2023.firebaseapp.com",
+              databaseURL: "https://signup-page-tech-2023-default-rtdb.asia-southeast1.firebasedatabase.app",
+              projectId: "signup-page-tech-2023",
+              storageBucket: "signup-page-tech-2023.appspot.com",
+              messagingSenderId: "521868450664",
+              appId: "1:521868450664:web:d87d9a42a0ffb0140c94dd",
+              measurementId: "G-09W9VS8JJM"
+            };
+          
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+
+            import {getDatabase, set, get, update, remove, ref, child}
+        from"https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"
+        const db = getDatabase();
+
+        var CreateUsername = document.querySelector("#CreateUsername");
+        var enterName = document.querySelector("#enterName");
+        var enterAge = document.querySelector("#enterAge");
+        var enterOrder = document.querySelector("#enterOrder");
+        var findUsername = document.querySelector("#findUsername");
+        var findName = document.querySelector("#findName");
+        var findAge = document.querySelector("#findAge");
+        var findOrder = document.querySelector("#findOrder")
+
+
+        var CreateBtn = document.querySelector("#Create");
+        var updateBtn = document.querySelector("#update");
+        var removeBtn = document.querySelector("#remove");
+        var findBtn = document.querySelector("#find");
+
+        function Createdata() {
+            set(ref(db, "People/"+ CreateUsername.value),{
+                Name: enterName.value,
+                Username: CreateUsername.value,
+                Age: enterAge.value,
+                Order: enterOrder.value
+            })
+            .then(()=>{
+                alert("Data added successfully!");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+        }
+
+        function FindData() {
+            const dbref = ref(db);
+
+            get(child(dbref, "People/" + findUsername.value))
+            .then((snapshot)=>{
+                if(snapshot.exists()){
+                    findName.innerHTML = "Name: " + snapshot.val().Name; 
+                    findAge.innerHTML = "Age: " + snapshot.val().Age;
+                    findOrder.innerHTML = "Order" + snapshot.val().Order; 
+                } else {
+                    alert("No data found");
+                }
+            })
+            .catch((error)=>{
+                alert(error)
+            });
+        }
+
+        function Updatedata() {
+            update(ref(db, "People/"+ CreateUsername.value),{
+                Name: enterName.value,
+                Age: enterAge.value,
+                Order: enterOrder.value
+            })
+            .then(()=>{
+                alert("Data updated successfully");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+        }
+
+        function Removedata() {
+            remove(ref(db, "People/"+ CreateUsername.value))
+            .then(()=>{
+                alert("Data deleted successfully");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+        }
+
+        CreateBtn.addEventListener('click', Createdata);
+        updateBtn.addEventListener('click', Updatedata);
+        removeBtn.addEventListener('click', Removedata);
+        findBtn.addEventListener('click', FindData);
+       
+          </script>
+
+
+</body>
+</html>
